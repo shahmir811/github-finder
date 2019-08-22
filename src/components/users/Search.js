@@ -1,52 +1,46 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-class Search extends Component {
-  state = {
-    text: ''
-  };
+const Search = ({ onSubmit, setAlert, clearUsers, count }) => {
+  const [text, setText] = useState('');
 
-  onSubmit = e => {
+  const formSubmit = e => {
     e.preventDefault();
-    if (this.state.text === '') {
-      this.props.setAlert('Please enter some text', 'light');
+    if (text === '') {
+      setAlert('Please enter some text', 'light');
       return;
     }
 
-    this.props.onSubmit(this.state.text);
-    this.setState({ text: '' });
+    onSubmit(text);
+    setText('');
   };
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  const onChange = e => setText(e.target.value);
 
-  render() {
-    const { clearUsers, count } = this.props;
-
-    return (
-      <div>
-        <form className='form' onSubmit={e => this.onSubmit(e)}>
-          <input
-            type='text'
-            name='text'
-            value={this.state.text}
-            onChange={this.onChange}
-            placeholder='Search Users...'
-          />
-          <input
-            type='submit'
-            value='Search'
-            className='btn btn-dark btn-block'
-          />
-        </form>
-        {count > 0 && (
-          <button className='btn btn-light btn-block' onClick={clearUsers}>
-            Clear
-          </button>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <form className='form' onSubmit={e => formSubmit(e)}>
+        <input
+          type='text'
+          name='text'
+          value={text}
+          onChange={e => onChange(e)}
+          placeholder='Search Users...'
+        />
+        <input
+          type='submit'
+          value='Search'
+          className='btn btn-dark btn-block'
+        />
+      </form>
+      {count > 0 && (
+        <button className='btn btn-light btn-block' onClick={clearUsers}>
+          Clear
+        </button>
+      )}
+    </div>
+  );
+};
 
 Search.propTypes = {
   onSubmit: PropTypes.func.isRequired,
